@@ -112,9 +112,9 @@
             font-size: 0.8rem;
         }
 
-        tr:nth-child(1) .pos-badge { background: #ffd700; color: #000; } /* 1er */
-        tr:nth-child(2) .pos-badge { background: #c0c0c0; color: #000; } /* 2eme */
-        tr:nth-child(3) .pos-badge { background: #cd7f32; color: #000; } /* 3eme */
+        tr:nth-child(1) .pos-badge { background: #ffd700; color: #000; }
+        tr:nth-child(2) .pos-badge { background: #c0c0c0; color: #000; }
+        tr:nth-child(3) .pos-badge { background: #cd7f32; color: #000; }
 
         .pts-col {
             font-weight: 800;
@@ -176,13 +176,6 @@
         .score-input:focus {
             border-color: var(--accent-green);
             outline: none;
-        }
-
-        .legend {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-top: 10px;
-            text-align: right;
         }
 
         @media (max-width: 600px) {
@@ -259,19 +252,18 @@
     </div>
 
     <script>
-        const players = ['David', 'Tsion', 'Tsion', 'Dan'];
+        const players = ['David', 'Tsion', 'Refael', 'Dan'];
 
-        // 6 Matchs de Poule (chacun contre chacun)
+        // 6 Matchs de Poule
         const matches = [
             { id: 1, p1: 'David', p2: 'Tsion', s1: null, s2: null },
-            { id: 2, p1: 'Tsion', p2: 'Dan', s1: null, s2: null },
-            { id: 3, p1: 'David', p2: 'Tsion', s1: null, s2: null },
+            { id: 2, p1: 'Refael', p2: 'Dan', s1: null, s2: null },
+            { id: 3, p1: 'David', p2: 'Refael', s1: null, s2: null },
             { id: 4, p1: 'Tsion', p2: 'Dan', s1: null, s2: null },
             { id: 5, p1: 'David', p2: 'Dan', s1: null, s2: null },
-            { id: 6, p1: 'Tsion', p2: 'Tsion', s1: null, s2: null }
+            { id: 6, p1: 'Tsion', p2: 'Refael', s1: null, s2: null }
         ];
 
-        // Générer les cartes des matchs
         function renderMatches() {
             const container = document.getElementById('group-matches');
             container.innerHTML = '';
@@ -289,7 +281,6 @@
                 container.appendChild(card);
             });
 
-            // Écouteurs d'événements sur les entrées de score
             document.querySelectorAll('#group-matches .score-input').forEach(input => {
                 input.addEventListener('input', (e) => {
                     const matchIdx = e.target.getAttribute('data-match');
@@ -304,15 +295,12 @@
             });
         }
 
-        // Calculer le classement
         function updateTournament() {
-            // Initialisation des stats
             let stats = {};
             players.forEach(p => {
                 stats[p] = { name: p, j: 0, v: 0, n: 0, d: 0, bp: 0, bc: 0, diff: 0, pts: 0 };
             });
 
-            // Traitement des matchs joués
             matches.forEach(m => {
                 if (m.s1 !== null && m.s2 !== null && !isNaN(m.s1) && !isNaN(m.s2)) {
                     const p1 = stats[m.p1];
@@ -338,14 +326,12 @@
                 }
             });
 
-            // Tri du classement : 1. Points, 2. Différence de buts, 3. Buts marqués
             let leaderboard = Object.values(stats).sort((a, b) => {
                 if (b.pts !== a.pts) return b.pts - a.pts;
                 if (b.diff !== a.diff) return b.diff - a.diff;
                 return b.bp - a.bp;
             });
 
-            // Affichage du tableau de classement
             const tbody = document.getElementById('standings-body');
             tbody.innerHTML = '';
             leaderboard.forEach((p, idx) => {
@@ -365,14 +351,12 @@
                 tbody.appendChild(tr);
             });
 
-            // Mise à jour des affiches des finales
             document.getElementById('f1-p1').textContent = leaderboard[0].name;
             document.getElementById('f1-p2').textContent = leaderboard[1].name;
             document.getElementById('f2-p1').textContent = leaderboard[2].name;
             document.getElementById('f2-p2').textContent = leaderboard[3].name;
         }
 
-        // Lancement initial
         renderMatches();
         updateTournament();
     </script>
